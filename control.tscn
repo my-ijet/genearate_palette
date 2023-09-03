@@ -1,0 +1,126 @@
+[gd_scene load_steps=2 format=3 uid="uid://bcmdpvny8bj2p"]
+
+[sub_resource type="GDScript" id="GDScript_grmqm"]
+script/source = "extends TextureRect
+
+var img : Image
+var tex : ImageTexture
+
+var gray_v :PackedFloat64Array= []
+
+var hue_v :PackedFloat64Array= []
+@onready var saturation: HSlider = $'../saturation'
+var light_v :PackedFloat64Array= []
+
+func _ready() -> void:
+	img = Image.create(16, 16, false,Image.FORMAT_RGB8)
+	tex = ImageTexture.new()
+	gen_values(); gen_image()
+
+func gen_image():
+	for x in range(0, 8):
+		var col := Color.from_ok_hsl(0, 0, gray_v[x] )
+		for y in range(0, 16):
+			img.set_pixel(x, y, col)
+	
+	for x in range(0, 8):
+		for y in range(0, 16):
+			var light := Color.from_ok_hsl(hue_v[y], saturation.value, light_v[x] )
+			img.set_pixel(8+x, y, light)
+		
+	self.texture = tex.create_from_image(img)
+
+
+func gen_values():
+	for x in range(0,8):
+		#print(x * (1.0/9))
+		gray_v.append(1 - (x * (1.0/7)))
+		
+	var hue :float
+	for x in range(0,8):
+		hue += (25/360.0); hue_v.append(hue)
+		hue += (20/360.0); hue_v.append(hue)
+		
+	for x in range(1,9):
+		#print(x * (1.0/9))
+		light_v.append(x * (1.0/9))
+		
+func _on_generate_pressed() -> void:
+	gen_image()
+
+func _on_save_image_pressed() -> void:
+	img.save_png('./img.png')
+"
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(450, 450)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+expand_mode = 1
+script = SubResource("GDScript_grmqm")
+
+[node name="buttons" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -95.0
+offset_top = -187.0
+grow_horizontal = 0
+grow_vertical = 0
+alignment = 1
+
+[node name="generate" type="Button" parent="buttons"]
+layout_mode = 2
+text = "generate"
+
+[node name="save_image" type="Button" parent="buttons"]
+layout_mode = 2
+text = "save image
+"
+
+[node name="saturation" type="HSlider" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -254.0
+offset_top = 600.0
+offset_bottom = 616.0
+grow_horizontal = 0
+max_value = 1.0
+step = 0.1
+value = 0.9
+tick_count = 11
+ticks_on_borders = true
+
+[node name="Label" type="Label" parent="saturation"]
+layout_mode = 0
+offset_left = -40.0
+offset_bottom = 23.0
+text = "HUE"
+
+[node name="ColorPicker" type="ColorPicker" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -298.0
+offset_bottom = 576.0
+grow_horizontal = 0
+color = Color(0.625894, 0.500715, 0.0853273, 1)
+
+[connection signal="pressed" from="buttons/generate" to="TextureRect" method="_on_generate_pressed"]
+[connection signal="pressed" from="buttons/save_image" to="TextureRect" method="_on_save_image_pressed"]
