@@ -15,7 +15,7 @@ var hue_v :PackedFloat64Array= []
 var light_v :PackedFloat64Array= []
 
 func _ready() -> void:
-	dimension.x = 8; dimension.y = 24;
+	dimension.x = 8; dimension.y = 16;
 	img = Image.create(dimension.x*2, dimension.y, false,Image.FORMAT_RGB8)
 	gen_values(); gen_image()
 
@@ -28,7 +28,7 @@ func gen_values():
 		gray_v.append(1 - (x * (1.0/(dimension.x-1))))
 
 	for y in range(0,dimension.y):
-		hue_v.append(y * (1.0/dimension.y))
+		hue_v.append(y * (1.0/dimension.y) + .075)
 
 	#for x in range(1,dimension.x+1):
 		#light_v.append(x * (1.0/(dimension.x+1)))
@@ -152,7 +152,7 @@ offset_top = 659.0
 offset_right = 648.062
 offset_bottom = 690.0
 step = 2.0
-value = 24.0
+value = 16.0
 rounded = true
 allow_greater = true
 prefix = "Y:"
