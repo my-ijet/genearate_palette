@@ -8,8 +8,8 @@ extends TextureRect
 
 @onready var hue_slider: HSlider = $"../hue_slider"
 @onready var hue_slider_label: Label = $"../hue_slider/Label"
-@onready var lightness_slider: HSlider = $"../lightness_slider"
-@onready var lightness_slider_label: Label = $"../lightness_slider/Label"
+@onready var lights_slider: HSlider = $"../lights_slider"
+@onready var lights_slider_label: Label = $"../lights_slider/Label"
 @onready var saturation: HSlider = $'../saturation'
 @onready var saturation_label: Label = $"../saturation/Label"
 @onready var overlay_lightness: HSlider = $"../overlay_lightness"
@@ -17,7 +17,7 @@ extends TextureRect
 @onready var overlay_on: CheckBox = $"../overlay_on"
 
 @onready var hue_slider_label_text := hue_slider_label.text
-@onready var lightness_slider_label_text := lightness_slider_label.text
+@onready var lights_slider_label_text := lights_slider_label.text
 @onready var saturation_label_text := saturation_label.text
 @onready var overlay_lightness_label_text := overlay_lightness_label.text
 
@@ -34,15 +34,15 @@ var light_v: PackedFloat64Array = []
 func _ready() -> void:
 	path_line.text = home_path
 	
-	img = Image.create((num_lights * 2) - 2, num_hues, false, Image.FORMAT_RGB8)
+	img = Image.create(num_lights * 2, num_hues, false, Image.FORMAT_RGB8)
 	gen_values(); gen_image()
 
 	hue_slider_label.text = hue_slider_label_text % num_hues
-	lightness_slider_label.text = lightness_slider_label_text % num_lights
+	lights_slider_label.text = lights_slider_label_text % num_lights
 	saturation_label.text = saturation_label_text % saturation.value
 	overlay_lightness_label.text = overlay_lightness_label_text % overlay_lightness.value
 
-func resize_img(): img.resize((num_lights * 2) - 2, num_hues)
+func resize_img(): img.resize(num_lights * 2, num_hues)
 
 func gen_values():
 	gray_v.clear(); hue_v.clear(); light_v.clear();
@@ -52,6 +52,8 @@ func gen_values():
 		gray_v.append(1 - (x * (1.0 / (num_lights - 1))))
 	gray_reversed_v = gray_v.duplicate()
 	gray_reversed_v.reverse()
+	gray_reversed_v[0] = 0.05
+	gray_reversed_v[-1] = 0.95
 	
 	for y in range(0, num_hues):
 		hue_v.append(1.0 / 12 + y * (1.0 / num_hues))
@@ -64,20 +66,20 @@ func gen_image():
 	var col_overlay: Color
 	var x_local: int
 	
-	for x in range(0, (num_lights * 2) - 2):
+	for x in range(0, num_lights * 2):
 		for y in range(0, num_hues):
 			x_local = x % num_lights
 			if x < num_lights:
 				col = Color.from_ok_hsl(0, 0, gray_v[x_local])
 			else:
-				if x_local == num_lights - 2: continue
+				if x_local == num_lights: continue
 				if overlay_on.button_pressed:
 					# overlay blend mode in righ side
-					col = Color.from_ok_hsl(0, 0, gray_reversed_v[x_local + 1])
+					col = Color.from_ok_hsl(0, 0, gray_reversed_v[x_local])
 					col_overlay = Color.from_ok_hsl(hue_v[y], saturation.value, overlay_lightness.value)
 					col = blend_overlay(col, col_overlay)
 				else:
-					col = Color.from_ok_hsl(hue_v[y], saturation.value, gray_reversed_v[x_local + 1])
+					col = Color.from_ok_hsl(hue_v[y], saturation.value, gray_reversed_v[x_local])
 			img.set_pixel(x, y, col)
 	
 	self.texture = ImageTexture.create_from_image(img)
@@ -117,7 +119,7 @@ func _on_lightness_slider_value_changed(value: float) -> void:
 	for x in range(1, roundi(value)): v += v - 1
 	num_lights = v
 	resize_img(); gen_values(); gen_image()
-	lightness_slider_label.text = lightness_slider_label_text % num_lights
+	lights_slider_label.text = lights_slider_label_text % num_lights
 
 
 func _on_save_image_pressed() -> void:
