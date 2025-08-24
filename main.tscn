@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://f2imuwxg74oc"]
 
-[ext_resource type="Script" path="res://main.gd" id="1_32lon"]
-[ext_resource type="Script" path="res://color_picker.gd" id="2_tb0mp"]
+[ext_resource type="Script" uid="uid://1hk4rhvgcg0k" path="res://main.gd" id="1_32lon"]
+[ext_resource type="Script" uid="uid://c7q34yspy05cy" path="res://color_picker.gd" id="2_tb0mp"]
 
 [node name="Main" type="Control"]
 custom_minimum_size = Vector2(768, 640)
@@ -23,7 +23,7 @@ script = ExtResource("1_32lon")
 
 [node name="ColorPicker" type="ColorPicker" parent="."]
 layout_mode = 1
-anchors_preset = 1
+anchors_preset = -1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -300.0
@@ -39,7 +39,7 @@ script = ExtResource("2_tb0mp")
 
 [node name="hue_slider" type="HSlider" parent="."]
 layout_mode = 1
-anchors_preset = 1
+anchors_preset = -1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -300.0
@@ -62,7 +62,7 @@ text = "HUE %s"
 
 [node name="lightness_slider" type="HSlider" parent="."]
 layout_mode = 1
-anchors_preset = 1
+anchors_preset = -1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -300.0
@@ -85,7 +85,7 @@ text = "lightness %s"
 
 [node name="saturation" type="HSlider" parent="."]
 layout_mode = 1
-anchors_preset = 1
+anchors_preset = -1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -755.0
@@ -108,7 +108,7 @@ text = "Saturation %s"
 
 [node name="overlay_lightness" type="HSlider" parent="."]
 layout_mode = 1
-anchors_preset = 1
+anchors_preset = -1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -537.0
@@ -131,6 +131,7 @@ text = "Overlay lightness %s"
 
 [node name="path_line" type="LineEdit" parent="."]
 layout_mode = 1
+anchors_preset = -1
 offset_left = 4.0
 offset_top = 460.0
 offset_right = 422.0
@@ -138,6 +139,7 @@ offset_bottom = 491.0
 
 [node name="edit_path" type="Button" parent="."]
 layout_mode = 1
+anchors_preset = -1
 offset_left = 425.0
 offset_top = 460.0
 offset_right = 453.0
@@ -147,6 +149,7 @@ text = "...
 
 [node name="image_name_line" type="LineEdit" parent="."]
 layout_mode = 1
+anchors_preset = -1
 offset_left = 4.0
 offset_top = 496.0
 offset_right = 179.0
@@ -155,6 +158,7 @@ text = "img"
 
 [node name="save_image" type="Button" parent="."]
 layout_mode = 1
+anchors_preset = -1
 offset_left = 183.0
 offset_top = 496.0
 offset_right = 266.0
